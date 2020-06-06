@@ -14,8 +14,8 @@ use Cwd qw (getcwd);
 ### ファイルシステムの文字コード
 # Windows: cp932
 # Linux: utf8
-#my $FSCharset = "cp932";
-my $FSCharset = "utf8";
+my $FSCharset = "cp932";
+# my $FSCharset = "utf8";
 
 ### デフォルトの保存ディレクトリの基準となるパス
 # ディレクトリの区切りは '/' または '\\'．末尾には任意．
@@ -579,6 +579,11 @@ _HELP_
     my $dir = File::Spec->rel2abs(
       $self->{baseDir}.EHG::Util::escapePath($self->{title}));
     my $url = $self->{topIndexURL} || $self->{targetURL};
+    if(EHG::Util::encodeFSC($self->{title}) =~ /\\/) {
+      $self->{saveDir} = $self->{baseDir}.EHG::Util::escapePath($url);
+      return;
+    }
+
     $self->{saveDir} = EHG::Util::encodeFSC($dir)
       ? $dir
       : $self->{baseDir}.EHG::Util::escapePath($url); 
